@@ -14,8 +14,8 @@ for(i in lista_plików){
     nlines <- nlines + sum(chunk == as.raw(10L))
   }
   close(f);
-  multiple_enties <- c(multiple_enties, (nlines))
-  
+  multiple_enties <- c(multiple_enties, (nlines+1))
+
   if(length(multiple_enties) > 2){
     for(iii in seq(1, length(multiple_enties), by = 1)){
       val <- iii+1;

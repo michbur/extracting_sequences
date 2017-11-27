@@ -1,3 +1,6 @@
+library(rentrez)
+library(seqinr)
+
 setwd("/home/jarek/extracting_sequences/Fragmented")
 lista_plikow <- list.files("/home/jarek/extracting_sequences/Fragmented")
 lista_plikow
@@ -26,9 +29,20 @@ for(i in length(lista_plikow)){
   r <- gbff[readlines_nr]
   t <- sub("                     /product=\"" , "", r)
   t <- sub("\"", "", t)
-  org_name <- gbff[2]
-  org_name <- sub("DEFINITION  ", "", org_name)
-  org_name <- sub(", complete genome.", "", org_name)
+
+  for(i in seq(1, 12)){
+    check_name <- gbff[i];
+    check <- grep(pattern = "  ORGANISM  ", check, ignore.case = T);
+    if(length(check) != 0){
+      o_n <- i;
+      break
+    }
+    else{next}
+  }
+  
+  org_name <- gbff[o_n]
+  org_name <- sub("  ORGANISM  ", "", org_name)
+
   d <- gbff[readlines_seq_nr]
   f <- sub("     rRNA            ", "", d)
   f <- sub("     rRNA            ", "", f)
@@ -43,14 +57,12 @@ for(i in length(lista_plikow)){
       start = f[ii,2]; end = f[ii,3]; a <- comp(plik_fasta[[1]][(as.integer(end)):(as.integer(start))]);
       setwd("/home/jarek/extracting_sequences/16S_rRNA");
       write.fasta(a, paste0(org_name, ", ",  t[ii]), file.out = paste0(org_name, "_",  t[[ii]], ".fasta"), open = "w", nbchar = 60, as.string = FALSE);
-      setwd("/home/jarek/extracting_sequences/Fragmented")};
-      print(c(i, iii));
-      lista_plików <- setdiff(lista_plików, i)
+      setwd("/home/jarek/extracting_sequences/Fragmented");
+}
     else{start = f[ii,1]; end = f[ii,2]; a <- plik_fasta[[1]][(as.integer(start)):(as.integer(end))];
       setwd("/home/jarek/extracting_sequences/16S_rRNA");
       write.fasta(a, paste0(org_name, ", ",  t[ii]), file.out = paste0(org_name, "_",  t[[ii]], ".fasta"), open = "w", nbchar = 60, as.string = FALSE);
-      setwd("/home/jarek/extracting_sequences/Fragmented")};
-      print(c(i, iii));
-      lista_plików <- setdiff(lista_plików, i)
+      setwd("/home/jarek/extracting_sequences/Fragmented");
+}
   }
 }
