@@ -39,11 +39,13 @@ for(i in lista_plików){
         fileConn <- file(paste0(plik_gbff, "_", iii, ".gbff"));
         writeLines(kolejna_sekwencja, fileConn);
         close(fileConn);
-        setwd("/home/jarek/extracting_sequences/Genomes")
-        print(c(i, iii))
+        setwd("/home/jarek/extracting_sequences/Genomes");
+        print(c(i, iii));
+        lista_plików <- setdiff(lista_plików, i)
         ### file.remove(plik_gbff)
       }
     }
   }
-  else{file.copy(plik_gbff, "/home/jarek/extracting_sequences/Fragmented")}  
+  else{file.copy(plik_gbff, "/home/jarek/extracting_sequences/Fragmented");
+    lista_plików <- setdiff(lista_plików, i)}  
 }
