@@ -1,9 +1,9 @@
 setwd("/home/jarek/extracting_sequences/Fragmented")
-lista_genomow <- list.files("/home/jarek/extracting_sequences/Fragmented")
-lista_genomow
+lista_plikow <- list.files("/home/jarek/extracting_sequences/Fragmented")
+lista_plikow
 
-for(i in length(lista_genomow)){
-  plik_gbff <- lista_genomow[i];
+for(i in length(lista_plikow)){
+  plik_gbff <- lista_plikow[i];
   plik_fasta <- gb2fasta(plik_gbff, paste0(plik_gbff, ".fasta"));
   plik_fasta <- read.fasta(plik_fasta);
   gbff <- readLines(plik_gbff)
@@ -43,10 +43,14 @@ for(i in length(lista_genomow)){
       start = f[ii,2]; end = f[ii,3]; a <- comp(plik_fasta[[1]][(as.integer(end)):(as.integer(start))]);
       setwd("/home/jarek/extracting_sequences/16S_rRNA");
       write.fasta(a, paste0(org_name, ", ",  t[ii]), file.out = paste0(org_name, "_",  t[[ii]], ".fasta"), open = "w", nbchar = 60, as.string = FALSE);
-      setwd("/home/jarek/extracting_sequences/Genomes")}
+      setwd("/home/jarek/extracting_sequences/Fragmented")};
+      print(c(i, iii));
+      lista_plików <- setdiff(lista_plików, i)
     else{start = f[ii,1]; end = f[ii,2]; a <- plik_fasta[[1]][(as.integer(start)):(as.integer(end))];
       setwd("/home/jarek/extracting_sequences/16S_rRNA");
       write.fasta(a, paste0(org_name, ", ",  t[ii]), file.out = paste0(org_name, "_",  t[[ii]], ".fasta"), open = "w", nbchar = 60, as.string = FALSE);
-      setwd("/home/jarek/extracting_sequences/Genomes")}
+      setwd("/home/jarek/extracting_sequences/Fragmented")};
+      print(c(i, iii));
+      lista_plików <- setdiff(lista_plików, i)
   }
 }
