@@ -27,26 +27,29 @@ for(i in seq(1, file_len)){
   plik_fasta <- read.fasta(plik_fasta);
   setwd("/home/jarek/extracting_sequences/Fragmented")
   plik_gbff <- lista_plikow[i];
+  print(plik_gbff)
   gbff <- readLines(plik_gbff);
   
   b <- str_extract_all(gbff, pattern ="16s ribosomal")
   readlines_nr <- grep(pattern = "16S ribosomal", gbff[1:length(gbff)], ignore.case = T)
   readlines_nr
+  readlines_nr_duplikat <- grep(pattern = "16S ribosomal RNA ", gbff[1:length(gbff)], ignore.case = F)
+  #if (is.null(readlines_nr) == T ){break}
   
   o_n <- integer()
-    
-  for(iii in seq(7, 15)){
+  
+  for(iii in seq(5, 15)){
     check_name <- gbff[iii];
-    check <- grep(pattern = "  ORGANISM  ", check, ignore.case = T);
+    check <- grep(pattern = "  ORGANISM  ", check_name, ignore.case = T);
     if(length(check) != 0){
-      o_n <- iii;
+      o_n <<- iii;
       break
     }
     # else{next}
   }
-
   org_name <- gbff[o_n]
   org_name <- sub("  ORGANISM  ", "", org_name)
+  print(org_name)
   
   lokacja_genu <- integer()
   
@@ -69,24 +72,34 @@ for(i in seq(1, file_len)){
       f <- sub("\\)", "", f)
       f <- sub("\\.\\.", " ", f)
       f <- str_split_fixed(f, " ", 3)
-      print(f)
-      print(f[2,1])
       file.path <- "/home/jarek/extracting_sequences/16S_rRNA"
-      
-      for(n in (seq(1, nrow(f)))){
+      print(nrow(f))
+
+      for(n in seq(1, nrow(f))){
         if(f[n,1] == "complement"){
-          start = f[n,2]; end = f[n,3]; a <- comp(plik_fasta[[1]][(as.integer(end)):(as.integer(start))]);
+          start = f[n,2]; end = f[n,3]; 
+          a <- comp(plik_fasta[[1]][(as.integer(end)):(as.integer(start))]);
           setwd("/home/jarek/extracting_sequences/16S_rRNA");
-          write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  t[[n]], ".fasta"), open = "w", nbchar = 60, as.string = FALSE);
-          setwd("/home/jarek/extracting_sequences/Fragmented");
+          # if(length(readlines_nr) != length(readlines_nr_duplikat)){
+          #   write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  t[[n]], "_", n, ".fasta"), open = "w", nbchar = 60, as.string = FALSE)
+          #   }
+          # else{
+          write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  t[[n]], ".fasta"), open = "w", nbchar = 60, as.string = FALSE)
+            # }
+          setwd("/home/jarek/extracting_sequences/Fragmented");print("tak")
     }
         else{start = f[n,1]; end = f[n,2]; a <- plik_fasta[[1]][(as.integer(start)):(as.integer(end))];
           setwd("/home/jarek/extracting_sequences/16S_rRNA");
-          write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  t[[n]], ".fasta"), open = "w", nbchar = 60, as.string = FALSE);
-          setwd("/home/jarek/extracting_sequences/Fragmented");
+          # if(length(readlines_nr) != length(readlines_nr_duplikat)){
+          #   write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  t[[n]], "_", n, ".fasta"), open = "w", nbchar = 60, as.string = FALSE)
+          #   }
+          # else{
+          write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  t[[n]], ".fasta"), open = "w", nbchar = 60, as.string = FALSE)
+            # }
+          setwd("/home/jarek/extracting_sequences/Fragmented");print("nie")
     }
       }
     }
-    else{next}
+    #else{next}
   }
 }
