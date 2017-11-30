@@ -15,29 +15,41 @@ for(i in lista_plikow){
   lista_plikow <- setdiff(lista_plikow, i)
 }
 
+
+
+### rest
+
+#### uploading gbff and fasta files
+
 lista_fasta <- list.files("/home/jarek/extracting_sequences/Fasta")
 lista_plikow <- list.files("/home/jarek/extracting_sequences/Fragmented")
 
 file_len <- length(lista_plikow)
 
-### rest
+
 for(i in seq(1, file_len)){
   setwd("/home/jarek/extracting_sequences/Fasta")
   plik_fasta <- lista_fasta[i];
+  print(plik_fasta);
   plik_fasta <- read.fasta(plik_fasta);
   setwd("/home/jarek/extracting_sequences/Fragmented")
   plik_gbff <- lista_plikow[i];
   print(plik_gbff)
   gbff <- readLines(plik_gbff);
+
   
-  b <- str_extract_all(gbff, pattern ="16s ribosomal")
-  readlines_nr <- grep(pattern = "16S ribosomal", gbff[1:length(gbff)], ignore.case = T)
+#### grep product 16S ribosomal RNA location
+    
+  b <- str_extract_all(gbff, pattern ="16s ribosomal RNA")
+  readlines_nr <- grep(pattern = "16S ribosomal RNA", gbff[1:length(gbff)], ignore.case = T)
   readlines_nr
   readlines_nr_duplikat <- grep(pattern = "16S ribosomal RNA ", gbff[1:length(gbff)], ignore.case = F)
   #if (is.null(readlines_nr) == T ){break}
   
-  o_n <- integer()
+
+#### fetching organism name
   
+  o_n <- integer()
   for(iii in seq(5, 15)){
     check_name <- gbff[iii];
     check <- grep(pattern = "  ORGANISM  ", check_name, ignore.case = T);
@@ -47,59 +59,78 @@ for(i in seq(1, file_len)){
     }
     # else{next}
   }
+  
+  
   org_name <- gbff[o_n]
   org_name <- sub("  ORGANISM  ", "", org_name)
   print(org_name)
   
   lokacja_genu <- integer()
+  check <- 0
+
   
+  
+#### fetching gene location which is above product location    
   for(ii in seq(1, 10)){
     check_if_gene <- readlines_nr - ii;
     check <- gbff[check_if_gene];
-    check <- grep(pattern = "gene | rRNA", check, ignore.case = T);
+    check <- grep(pattern = " rRNA ", check, ignore.case = F);
     if(length(check) != 0){
       lokacja_genu <- ii;
-      
-      readlines_seq_nr <- readlines_nr - lokacja_genu
-      r <- gbff[readlines_nr]
-      t <- sub("                     /product=\"" , "", r)
-      t <- sub("\"", "", t)
-      
-      d <- gbff[readlines_seq_nr]
-      f <- sub("     rRNA            ", "", d)
-      f <- sub("     rRNA            ", "", f)
-      f <- sub("\\(", " ", f)
-      f <- sub("\\)", "", f)
-      f <- sub("\\.\\.", " ", f)
-      f <- str_split_fixed(f, " ", 3)
-      file.path <- "/home/jarek/extracting_sequences/16S_rRNA"
-      print(nrow(f))
+      break
+    }
+  }
+  if(length(lokacja_genu) != 0){
+    
+    # print(lokacja_genu)
 
-      for(n in seq(1, nrow(f))){
-        if(f[n,1] == "complement"){
-          start = f[n,2]; end = f[n,3]; 
-          a <- comp(plik_fasta[[1]][(as.integer(end)):(as.integer(start))]);
-          setwd("/home/jarek/extracting_sequences/16S_rRNA");
-          # if(length(readlines_nr) != length(readlines_nr_duplikat)){
-          #   write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  t[[n]], "_", n, ".fasta"), open = "w", nbchar = 60, as.string = FALSE)
-          #   }
-          # else{
+    
+#### splitting strings to single chars
+    
+    readlines_seq_nr <- readlines_nr - lokacja_genu
+    r <- gbff[readlines_nr]
+    t <- sub("                     /product=\"" , "", r)
+    t <- sub("\"", "", t)
+    
+    d <- gbff[readlines_seq_nr]
+    f <- sub("     rRNA            ", "", d)
+    f <- sub("     rRNA            ", "", f)
+    f <- sub("\\(", " ", f)
+    f <- sub("\\)", "", f)
+    f <- sub("\\.\\.", " ", f)
+    f <- str_split_fixed(f, " ", 3)
+    file.path <- "/home/jarek/extracting_sequences/16S_rRNA"
+
+#### gene location is marked and cut from fasta with reversing complement strings (comp is getting errors for now)  
+        
+    for(n in seq(1, nrow(f))){
+      if(f[n,1] == "complement"){print(n);print("1")
+        start = f[n,2]; start = as.integer(start);print("2")
+        end = f[n,3]; end = as.integer(end);print("3")
+        a <- comp(as.character(plik_fasta[[1]][end:start]));print("4")
+        setwd("/home/jarek/extracting_sequences/16S_rRNA");
+        if(length(readlines_nr) != length(readlines_nr_duplikat)){print("nie1")
+          write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  t[[n]], "_", n, ".fasta"), open = "w", nbchar = 60, as.string = FALSE)
+        }
+        else{print("nie2")
           write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  t[[n]], ".fasta"), open = "w", nbchar = 60, as.string = FALSE)
-            # }
-          setwd("/home/jarek/extracting_sequences/Fragmented");print("tak")
-    }
-        else{start = f[n,1]; end = f[n,2]; a <- plik_fasta[[1]][(as.integer(start)):(as.integer(end))];
-          setwd("/home/jarek/extracting_sequences/16S_rRNA");
-          # if(length(readlines_nr) != length(readlines_nr_duplikat)){
-          #   write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  t[[n]], "_", n, ".fasta"), open = "w", nbchar = 60, as.string = FALSE)
-          #   }
-          # else{
+        }
+        setwd("/home/jarek/extracting_sequences/Fragmented")
+      }
+      if(f[n,1] != "complement"){print(n)
+        start = f[n,1]; start = as.integer(start);
+        end = f[n,2]; end = as.integer(end);
+        a <- plik_fasta[start:end];
+        setwd("/home/jarek/extracting_sequences/16S_rRNA");
+        if(length(readlines_nr) != length(readlines_nr_duplikat)){print("tak1")
+          write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  t[[n]], "_", n, ".fasta"), open = "w", nbchar = 60, as.string = FALSE)
+        }
+        else{print("tak2")
           write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  t[[n]], ".fasta"), open = "w", nbchar = 60, as.string = FALSE)
-            # }
-          setwd("/home/jarek/extracting_sequences/Fragmented");print("nie")
-    }
+        }
+        setwd("/home/jarek/extracting_sequences/Fragmented")
       }
     }
-    #else{next}
-  }
+  }else{next}
 }
+
