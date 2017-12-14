@@ -138,7 +138,7 @@ for(i in seq(1, file_len)){
         a <- comp(plik_fasta[[1]][end:start])
         setwd("/home/jarek/extracting_sequences/csgA");
         # if(length(readlines_nr) != length(readlines_nr_duplikat)){
-        write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  t[[n]], "_", n, ".fasta"), open = "w", nbchar = 60, as.string = FALSE)
+        write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  "csgA", ".fasta"), open = "a", nbchar = 60, as.string = FALSE)
         # }
         # else{
           # write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  t[[n]], ".fasta"), open = "w", nbchar = 60, as.string = FALSE)
@@ -152,7 +152,7 @@ for(i in seq(1, file_len)){
         a <- plik_fasta[[1]][end:start];
         setwd("/home/jarek/extracting_sequences/csgA");
         # if(length(readlines_nr) != length(readlines_nr_duplikat)){
-        write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  t[[n]], ".fasta"), open = "a", nbchar = 60, as.string = FALSE)
+        write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  "csgA", ".fasta"), open = "a", nbchar = 60, as.string = FALSE)
         # }
         # else{
         #   write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  t[[n]], ".fasta"), open = "w", nbchar = 60, as.string = FALSE)
