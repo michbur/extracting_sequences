@@ -142,10 +142,10 @@ for(i in seq(1, file_len)){
         a <- comp(plik_fasta[[1]][end:start])
         setwd("/home/jarek/extracting_sequences/16S_rRNA");
         if(length(readlines_nr) != length(readlines_nr_duplikat)){
-          write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  t[[n]],".fasta"), open = "a", nbchar = 60, as.string = FALSE)
+          write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  "16S rRNA",".fasta"), open = "a", nbchar = 60, as.string = FALSE)
         }                                                                                    # "_", n, 
         else{
-          write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  t[[n]], ".fasta"), open = "w", nbchar = 60, as.string = FALSE)
+          write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  "16S rRNA", ".fasta"), open = "a", nbchar = 60, as.string = FALSE)
         }
         setwd("/home/jarek/extracting_sequences/Fragmented")
       }
@@ -156,7 +156,7 @@ for(i in seq(1, file_len)){
         a <- plik_fasta[[1]][start:end];
         setwd("/home/jarek/extracting_sequences/16S_rRNA");
         if(length(readlines_nr) != length(readlines_nr_duplikat)){
-          write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  t[[n]], ".fasta"), open = "a", nbchar = 60, as.string = FALSE)
+          write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  "16S rRNA", ".fasta"), open = "a", nbchar = 60, as.string = FALSE)
         }                                                                                       # "_", n, 
         # else{
         #   write.fasta(a, paste0(org_name, ", ",  t[n]), file.out = paste0(org_name, "_",  t[[n]], ".fasta"), open = "w", nbchar = 60, as.string = FALSE)
