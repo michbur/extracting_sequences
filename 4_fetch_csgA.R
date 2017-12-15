@@ -2,11 +2,6 @@ library(rentrez)
 library(seqinr)
 library(stringr)
 
-setwd("/home/jarek/extracting_sequences/Fasta")
-plik_fasta <- "GCA_000005845.2_ASM584v2_genomic.gbff.fasta"
-setwd("/home/jarek/extracting_sequences/Fragmented")
-plik_gbff <- "GCA_000005845.2_ASM584v2_genomic.gbff"
-
 #### uploading gbff and fasta files to vectors
 
 lista_fasta <- list.files("/home/jarek/extracting_sequences/Fasta")
