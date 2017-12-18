@@ -84,9 +84,10 @@ for(i in seq(1, file_len)){
   
   lokacja_genu <- integer()
   check <- 0
-  
+  gen <- 0
   #### fetching cds location which is above gene    
   for(ii in seq(1,2)){
+    gen <- 0
     check_if_gene <- readlines_nr[ii] - 1;
     check <- gbff[check_if_gene];
     check <- grep(pattern = "     CDS             ", check, ignore.case = F);
