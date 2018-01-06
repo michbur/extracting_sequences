@@ -4,7 +4,6 @@ library(seqinr)
 library(stringr)
 
 genomes_path <- "/home/michal/Dokumenty/Genomy_backup/"
-multiple_enties <- readLines(paste0(genomes_path, plik_gbff))
 
 genome_files <- list.files(genomes_path)
 gbff_file <- genome_files[1]
@@ -93,6 +92,7 @@ get_sequence <- function(ith_file, seq_name) {
     unlist(recursive = FALSE)
 }
 
-n_locus <- pblapply(genome_files[1L:5], function(ith_file) 
-  get_sequence(ith_file, "16S ribosomal RNA"))
+seq_rna <- pblapply(genome_files[1L:5], function(ith_file) 
+  get_sequence(ith_file, "16S ribosomal RNA")) %>% 
+  unlist(recursive = FALSE)
 
